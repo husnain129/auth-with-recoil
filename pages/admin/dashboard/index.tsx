@@ -6,5 +6,5 @@ const AdminDashboardPage = () => {
 
 export default privateRoutes({
   Component: AdminDashboardPage,
-  options: { pathAfterFailure: '/admin/auth/login' },
+  options: { pathAfterFailure: '/auth/login', role: 'admin' },
 });
