@@ -1,7 +1,13 @@
+import { Text } from '@chakra-ui/react';
 import privateRoutes from '../../../components/auth/private-routes';
+import Layout from '../../../layout';
 
 const AdminDashboardPage = () => {
-  return <div>AdminDashboardPage</div>;
+  return (
+    <Layout>
+      <Text fontWeight={'semibold'}>Admin Dashboard</Text>
+    </Layout>
+  );
 };
 
 export default privateRoutes({

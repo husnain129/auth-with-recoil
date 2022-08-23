@@ -113,7 +113,7 @@ const LoginPage = () => {
             type="password"
           />
         </FormControl>
-        <Button onClick={handleLogin} w={'full'} colorScheme="green">
+        <Button onClick={() => handleLogin()} w={'full'} colorScheme="green">
           Login
         </Button>
       </VStack>

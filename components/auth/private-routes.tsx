@@ -1,14 +1,8 @@
 import { Flex, Spinner } from '@chakra-ui/react';
 import Router from 'next/router';
-import React from 'react';
-import { AuthCredetials } from '../../pages/auth/login';
-
-type User = Omit<AuthCredetials, 'password'>;
-
-type MyState = {
-  loading: boolean;
-  user: User;
-};
+import React, { useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { UserAtom } from '../../pages/auth/login';
 
 const privateRoutes = ({
   Component,
@@ -17,42 +11,39 @@ const privateRoutes = ({
   Component: React.ComponentType;
   options: { pathAfterFailure: string; role: 'admin' | 'user' };
 }) => {
-  class PrivateRoutes extends React.Component {
-    state: MyState = {
-      loading: true,
-      user: {} as User,
-    };
-
-    componentDidMount(): void {
-      if (typeof window === 'undefined') return;
-      const user = JSON.parse(localStorage.getItem('auth') as string);
-      this.setState((pre) => ({
-        ...pre,
-        user,
-      }));
-      this.setState({ loading: true });
+  const PrivateRoutes = () => {
+    const [loading, setLoading] = React.useState(true);
+    const [user, setUser] = useRecoilState(UserAtom);
+    console.log('user', user);
+    useEffect(() => {
+      if (typeof window !== 'undefined') {
+        setUser((pre) => ({
+          ...pre,
+          user: JSON.parse(localStorage.getItem('auth') as string),
+        }));
+      }
+      setUser(user);
       if (user && Object.keys(user).length > 0 && user.role === role) {
-        this.setState({ loading: false });
+        setLoading(false);
       } else {
         Router.push(pathAfterFailure);
       }
-    }
-    render(): React.ReactNode {
-      return !this.state.loading ? (
-        <Component />
-      ) : (
-        <Flex
-          w="full"
-          bg="blackAlpha.300"
-          h="100vh"
-          alignItems={'center'}
-          justifyContent="center"
-        >
-          <Spinner />
-        </Flex>
-      );
-    }
-  }
+    }, [setUser, user]);
+
+    return !loading ? (
+      <Component />
+    ) : (
+      <Flex
+        w="full"
+        bg="blackAlpha.300"
+        h="100vh"
+        alignItems={'center'}
+        justifyContent="center"
+      >
+        <Spinner />
+      </Flex>
+    );
+  };
   return PrivateRoutes;
 };
 
