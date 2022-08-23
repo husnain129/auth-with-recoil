@@ -32,14 +32,12 @@ const privateRoutes = ({
       }));
       this.setState({ loading: true });
       if (user && Object.keys(user).length > 0 && user.role === role) {
-        console.log('this.state.user,', user);
         this.setState({ loading: false });
       } else {
         Router.push(pathAfterFailure);
       }
     }
     render(): React.ReactNode {
-      console.log('this.state.user,', this.state.loading);
       return !this.state.loading ? (
         <Component />
       ) : (
